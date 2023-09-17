@@ -4,6 +4,7 @@
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+		flake-parts.inputs.nixpkgs-lib.follows = "/nixpkgs";
 		filesystem-livesync-source.follows = "/";
 	};
 

@@ -3,9 +3,11 @@
 
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+		filesystem-livesync-source.follows = "/";
 	};
 
-	outputs = inputs@{ flake-parts, ... }:
+	outputs = inputs@{ flake-parts, filesystem-livesync-source, ... }:
 		flake-parts.lib.mkFlake { inherit inputs; } {
 			imports = [
 				# To import a flake module
@@ -21,7 +23,12 @@
 				# system.
 
 				# Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
-				packages.default = pkgs.hello;
+				packages.default = self'.packages.filesystem-livesync;
+				packages.filesystem-livesync = pkgs.callPackage ./filesystem-livesync.nix {
+					src = filesystem-livesync-source.outPath;
+					version = "0.0.1";
+					npmDepsHash = "sha256-6PO3gbAwNH8xOUuP9D9YZ2BLtdV5mlmkxt/981+f4K0=";
+				};
 			};
 			flake = {
 				# The usual flake attributes can be defined here, including system-
